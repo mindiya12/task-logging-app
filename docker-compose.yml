@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: task_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: task_user
+      POSTGRES_PASSWORD: task_password
+      POSTGRES_DB: task_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_net
+
+  # backend:
+  #   build: ./apps/backend
+  #   container_name: task_backend
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./apps/backend/.env
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - backend_net
+
+volumes:
+  postgres_data:
+
+networks:
+  backend_net:
+    driver: bridge
