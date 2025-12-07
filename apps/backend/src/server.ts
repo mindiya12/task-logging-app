@@ -1,28 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import app from './app';
 import { pool } from './config/db';
-import taskRoutes from './api/routes/taskRoutes';
-console.log('Pool value at startup:', typeof pool);
-dotenv.config();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use('/api', taskRoutes);
 
 const PORT = process.env.PORT || 3000;
-
-app.get('/health', async (_req, res) => {
-  try {
-    await pool.query('SELECT 1');
-    res.json({ status: 'ok', db: 'up' });
-  } catch (err) {
-    console.error('DB health check failed', err);
-    res.status(500).json({ status: 'error', db: 'down' });
-  }
-});
 
 const server = app.listen(PORT, () => {
   console.log(`Backend listening on port ${PORT}`);
