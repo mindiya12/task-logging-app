@@ -7,27 +7,46 @@ services:
       POSTGRES_USER: task_user
       POSTGRES_PASSWORD: task_password
       POSTGRES_DB: task_db
-    ports:
-      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./infra/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - backend_net
 
-  # backend:
-  #   build: ./apps/backend
-  #   container_name: task_backend
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./apps/backend/.env
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   ports:
-  #     - '3000:3000'
-  #   networks:
-  #     - backend_net
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: task_backend
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: task_user
+      DB_PASSWORD: task_password
+      DB_NAME: task_db
+    depends_on:
+      - postgres
+    networks:
+      - backend_net
+    ports:
+      - '4000:4000'
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: task_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '3000:80'
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:4000/api
+    networks:
+      - backend_net
 
 volumes:
   postgres_data:
