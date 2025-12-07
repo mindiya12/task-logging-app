@@ -116,8 +116,8 @@ jobs:
           file: ./apps/backend/Dockerfile
           push: true
           tags: |
-            yourdockeruser/task-backend:latest
-            yourdockeruser/task-backend:${{ github.sha }}
+            mindiya/task-backend:latest
+            mindiya/task-backend:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v6
@@ -126,5 +126,5 @@ jobs:
           file: ./apps/frontend/Dockerfile
           push: true
           tags: |
-            yourdockeruser/task-frontend:latest
-            yourdockeruser/task-frontend:${{ github.sha }}
+            mindiya/task-frontend:latest
+            mindiya/task-frontend:${{ github.sha }}
