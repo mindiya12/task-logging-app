@@ -5,11 +5,12 @@ export async function createTaskHandler(req: Request, res: Response) {
   try {
     const task = await createTaskService(req.body);
     res.status(201).json({ success: true, data: task });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error creating task', err);
+    const message = err instanceof Error ? err.message : 'Failed to create task';
     res.status(400).json({
       success: false,
-      message: err.message || 'Failed to create task',
+      message,
     });
   }
 }
