@@ -10,6 +10,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onCreate }) => {
   const [description, setDescription] = useState('');
   const [assignee, setAssignee] = useState('');
   const [creator, setCreator] = useState('');
+  const [status, setStatus] = useState('pending');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,11 +30,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ onCreate }) => {
         description: description || undefined,
         assignee: assignee || undefined,
         creator: creator || undefined,
+        status,
       });
       setTitle('');
       setDescription('');
       setAssignee('');
       setCreator('');
+      setStatus('pending');
     } catch (err: any) {
       setError(err.message || 'Failed to create task');
     } finally {
@@ -43,40 +46,42 @@ const TaskForm: React.FC<TaskFormProps> = ({ onCreate }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <label>
-          Title:
-          <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading} />
-        </label>
+      {error && <p className="error-text">{error}</p>}
+
+      <div className="form-row">
+        <label>Title</label>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading} />
       </div>
-      <div>
-        <label>
-          Description:
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={loading}
-          />
-        </label>
+
+      <div className="form-row">
+        <label>Description</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          disabled={loading}
+        />
       </div>
-      <div>
-        <label>
-          Assignee:
-          <input
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            disabled={loading}
-          />
-        </label>
+
+      <div className="form-row">
+        <label>Assignee</label>
+        <input value={assignee} onChange={(e) => setAssignee(e.target.value)} disabled={loading} />
       </div>
-      <div>
-        <label>
-          Creator:
-          <input value={creator} onChange={(e) => setCreator(e.target.value)} disabled={loading} />
-        </label>
+
+      <div className="form-row">
+        <label>Creator</label>
+        <input value={creator} onChange={(e) => setCreator(e.target.value)} disabled={loading} />
       </div>
-      <button type="submit" disabled={loading}>
+
+      <div className="form-row">
+        <label>Status</label>
+        <select value={status} onChange={(e) => setStatus(e.target.value)} disabled={loading}>
+          <option value="pending">Pending</option>
+          <option value="in_progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+
+      <button type="submit" className="primary" disabled={loading}>
         {loading ? 'Creating...' : 'Create Task'}
       </button>
     </form>

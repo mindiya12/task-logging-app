@@ -11,11 +11,14 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
   }
 
   return (
-    <ul>
+    <ul className="task-list">
       {tasks.map((task) => (
         <li key={task.id}>
-          <strong>{task.title}</strong> – {task.status}{' '}
-          {task.assignee ? ` (Assignee: ${task.assignee})` : null}
+          <div className="task-title">{task.title}</div>
+          <div className="task-meta">
+            Status: {task.status}
+            {task.assignee ? ` • Assignee: ${task.assignee}` : ''}
+          </div>
         </li>
       ))}
     </ul>

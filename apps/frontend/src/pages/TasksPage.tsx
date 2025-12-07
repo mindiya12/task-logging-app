@@ -32,16 +32,20 @@ const TasksPage: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className="app-root">
       <h1>Task Logging App</h1>
 
-      <h2>Create Task</h2>
-      <TaskForm onCreate={handleCreate} />
+      <div className="card">
+        <h2>Create Task</h2>
+        <TaskForm onCreate={handleCreate} />
+      </div>
 
-      <h2>Tasks</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && !error && <TaskList tasks={tasks} />}
+      <div className="card">
+        <h2>Tasks</h2>
+        {loading && <p>Loading...</p>}
+        {error && <p className="error-text">{error}</p>}
+        {!loading && !error && <TaskList tasks={tasks} />}
+      </div>
     </div>
   );
 };
