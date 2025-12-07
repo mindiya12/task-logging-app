@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: task_user
+          POSTGRES_PASSWORD: task_password
+          POSTGRES_DB: task_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U task_user -d task_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: task_user
+      DB_PASSWORD: task_password
+      DB_NAME: task_db
+      PORT: 4000
+      REACT_APP_API_BASE_URL: http://localhost:4000/api
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install backend deps
+        working-directory: apps/backend
+        run: npm ci
+
+      - name: Install frontend deps
+        working-directory: apps/frontend
+        run: npm ci
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..20}; do
+            if pg_isready -h localhost -p 5432 -U task_user -d task_db; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres..."
+            sleep 3
+          done
+          echo "Postgres did not become ready in time"
+          exit 1
+
+      # Backend lint + build + tests
+      - name: Backend lint
+        working-directory: apps/backend
+        run: npm run lint
+
+      - name: Backend build
+        working-directory: apps/backend
+        run: npm run build
+
+      - name: Backend tests
+        working-directory: apps/backend
+        run: npm test
+
+      # Frontend lint + build + tests
+      - name: Frontend lint
+        working-directory: apps/frontend
+        run: npm run lint
+
+      - name: Frontend build
+        working-directory: apps/frontend
+        run: npm run build
+
+      - name: Frontend tests
+        working-directory: apps/frontend
+        run: npm test
