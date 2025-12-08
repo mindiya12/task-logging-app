@@ -14,10 +14,15 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
     <ul className="task-list">
       {tasks.map((task) => (
         <li key={task.id}>
-          <div className="task-title">{task.title}</div>
+          <div className="task-title">
+            #{task.id} — {task.title}
+          </div>
           <div className="task-meta">
             Status: {task.status}
             {task.assignee ? ` • Assignee: ${task.assignee}` : ''}
+          </div>
+          <div className="task-meta">
+            Created at: {task.created_at ? new Date(task.created_at).toLocaleString() : 'N/A'}
           </div>
         </li>
       ))}

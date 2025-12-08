@@ -5,6 +5,6 @@ export interface Task {
   status: string;
   assignee: string | null;
   creator: string | null;
-  due_date: string | null; // ISO string from backend
-  created_at: string; // ISO string
+  due_date: string | null;
+  created_at: string;
 }

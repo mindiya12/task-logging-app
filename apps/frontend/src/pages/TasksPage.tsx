@@ -28,7 +28,7 @@ const TasksPage: React.FC = () => {
 
   const handleCreate = async (payload: CreateTaskPayload) => {
     const newTask = await createTask(payload);
-    setTasks((prev) => [newTask, ...prev]); // prepend for newest first
+    setTasks((prev) => [newTask, ...prev]);
   };
 
   return (
