@@ -61,8 +61,8 @@ The system consists of four main Docker services:
 
 - React SPA served as static files behind Nginx
 - Uses a dynamic API base URL:
-  - Development: `REACT_APP_API_BASE_URL` or `http://localhost:4000/api`
-  - Production: relative `/api` (Nginx routes to backend)
+  - Development: `REACT_APP_API_BASE_URL`
+  - Production: relative `/api`
 
 ### `backend`
 
@@ -131,7 +131,7 @@ cd apps/frontend
 npm install
 npm start
 
-Configure API base URL via: REACT_APP_API_BASE_URL=http://localhost:4000/api
+Configure API base URL via: REACT_APP_API_BASE_URL=https://tasklogging.codes/api
 
 ---
 
@@ -164,8 +164,8 @@ For each push to `main`:
 On successful CI:
 
 1. Build and push images to Docker Hub:
-   - `mindiya/task-logging-frontend`
-   - `mindiya/task-logging-backend`
+   - `mindiya/task-frontend`
+   - `mindiya/task-backend`
 2. SSH into the AWS VPS using GitHub Secrets:
    - `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`
 3. On VPS:
@@ -189,7 +189,7 @@ On the VPS:
    - Certbot
 
 2. Clone the repository:
-   git clone <repo-url>
+   git clone https://github.com/mindiya12/task-logging-app.git
    cd task-logging-app
 
 3. Run the stack:
@@ -241,11 +241,11 @@ for forced HTTPS redirection.
 
 Frontend image:
 
-- `mindiya/task-logging-frontend:latest`
+- `mindiya/task-frontend:latest`
 
 Backend image:
 
-- `mindiya/task-logging-backend:latest`
+- `mindiya/task-backend:latest`
 
 ---
 
